@@ -35,9 +35,8 @@ class CarConstDi(
     /**
      * セカンダリコンストラクタ：クラスに0個以上、最終的に必ずプライマリコンストラクタを呼ぶ必要がある
      * constructor(引数: データ型): this(引数)
-     *
      */
-    constructor(secondConstEngine: Engine) : this(engine = Engine(), Tire("Confort"))
+    constructor(engine: Engine) : this(engine = Engine(), Tire("Comfort"))
 
     private var tire: Tire
     init {
@@ -49,20 +48,10 @@ class CarConstDi(
         println("const")
         engine.start()
     }
-}
 
-// セッターインジェクション
-class CarSetterDi{
-    private lateinit var engine: Engine
-    fun setter(setEngine: Engine) {
-        this.engine = setEngine
+    fun tireType() {
+        tire.type()
     }
-
-    fun start() {
-        println("setter")
-        engine.start()
-    }
-
 }
 
 class Engine {
@@ -71,7 +60,13 @@ class Engine {
     }
 }
 
-class Tire(val type: String) {}
+class Tire(private val type: String) {
+    // openつけるとオーバーライド可能なメソッド
+    fun type() {
+        println("This tire is $type")
+    }
+}
+
 
 fun main(args: Array<String>) {
     val carNotDi = CarNotDi()
@@ -81,11 +76,16 @@ fun main(args: Array<String>) {
     val tire = Tire("Sport")
 
     // コンストラクタインジェクション
+    // プライマリコンストラクタ呼んでる
     val constCar = CarConstDi(engine, tire)
     constCar.start()
+    constCar.tireType()
 
-    // セッターインジェクション
-    val setterCar = CarSetterDi()
-    setterCar.setter(engine)
-    setterCar.start()
+    // セカンダリコンストラクタ呼んでる
+    println("secondConst")
+    val secondConstCar = CarConstDi(engine)
+    secondConstCar.start()
+    secondConstCar.tireType()
+
+
 }
