@@ -43,6 +43,24 @@ class Tire(private val type: String) {
     }
 }
 
+//openで継承可能クラス
+open class Person(var name: String = "ナナシ"){
+    //openでoverride可能メソッド
+    open fun selfIntroduction(): String {
+        return "私は${this.name}です。"
+    }
+}
+
+//クラス変数の定義の後の:で継承クラスを指定
+class Driver(name: String, private var team: String): Person(name) {
+    //superクラスの関数を書き換え
+    //これ以上派生クラスでoverrideさせたくなければfinalを付ける
+    //けど特に継承する予定がなければ冗長なので削除する
+    final override fun selfIntroduction(): String{
+        return "${super.selfIntroduction()}所属チームは${this.team}です。"
+    }
+}
+
 
 fun main(args: Array<String>) {
     val engine = Engine()
@@ -55,5 +73,8 @@ fun main(args: Array<String>) {
     val secondConstCar = Car(engine)
     secondConstCar.start()
     secondConstCar.tireType()
+
+    val driver = Driver("ロニー・クインタレッリ", "NISMO")
+    println(driver.selfIntroduction())
 
 }
